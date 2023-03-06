@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="index.js" type="module" defer></script>
+    <title>3D Hollow Object</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="object-container">
+        <div class="canvas__display">
+          <canvas id="webglCanvas--line" width="800" height="800"> </canvas>
+        </div>
+        <div class="canvas__controller">
+          <b>Control Panel</b>
+          <div class="control-panel">
+            <div class="control-panel__item input-row">
+              <p>Projection View:</p>
+              <select name="projection" id="" style="margin-left: 8px">
+                <option value="Orthographic">Orthographic</option>
+                <option value="Oblique">Oblique</option>
+                <option value="Perspective">Perspective</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
