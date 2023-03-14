@@ -12,18 +12,45 @@
     <div class="container">
       <div class="object-container">
         <div class="canvas__display">
-          <canvas id="webglCanvas--line" width="800" height="800"> </canvas>
+          <canvas id="canvas" width="800" height="800"> </canvas>
         </div>
         <div class="canvas__controller">
           <b>Control Panel</b>
           <div class="control-panel">
-            <div class="control-panel__item input-row">
-              <p>Projection View:</p>
+            <div class="input-row">
+              <label for="projection">Projection View:</label>
               <select name="projection" id="" style="margin-left: 8px">
                 <option value="Orthographic">Orthographic</option>
                 <option value="Oblique">Oblique</option>
                 <option value="Perspective">Perspective</option>
               </select>
+            </div>
+            <p><b>Translate</b></p>
+            <div class="input-row">
+              <label for="tx">x:</label>
+              <input type="range" min="0" max="800" name="tx" id="tx" />
+              <label for="ty" style="margin-left: 12px">y:</label>
+              <input type="range" min="0" max="800" name="ty" id="ty" />
+              <label for="tz" style="margin-left: 12px">z:</label>
+              <input type="range" min="0" max="400" name="tz" id="tz" />
+            </div>
+            <p><b>Rotation</b></p>
+            <div class="input-row">
+              <label for="rx">x:</label>
+              <input type="range" min="0" max="720" name="rx" id="rx" />
+              <label for="ry" style="margin-left: 12px">y:</label>
+              <input type="range" min="0" max="720" name="ry" id="ry" />
+              <label for="rz" style="margin-left: 12px">z:</label>
+              <input type="range" min="0" max="720" name="rz" id="rz" />
+            </div>
+            <p><b>Scale</b></p>
+            <div class="input-row">
+              <label for="sx">x:</label>
+              <input type="range" name="sx" id="sx" step="0.01" max="2" />
+              <label for="sy" style="margin-left: 12px">y:</label>
+              <input type="range" name="sy" id="sy" step="0.01" max="2" />
+              <label for="sz" style="margin-left: 12px">z:</label>
+              <input type="range" name="sz" id="sz" step="0.01" max="2" />
             </div>
           </div>
         </div>

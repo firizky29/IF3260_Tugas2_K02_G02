@@ -42,7 +42,7 @@ const MatrixOp = {
     const m2Obj = m2.getPropsToObj();
 
     if (m1Obj.cols !== m2Obj.cols || m1Obj.rows !== m2Obj.rows) {
-      console.log('Unable to multiply due to invalid matrix dimension');
+      console.log('Unable to add due to invalid matrix dimension');
       return;
     }
 

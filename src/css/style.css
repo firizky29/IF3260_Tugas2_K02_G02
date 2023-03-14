@@ -79,6 +79,10 @@ select {
   align-items: normal;
 }
 
+.control-panel > * {
+  margin-bottom: 16px;
+}
+
 .input-row {
   display: flex;
 }
