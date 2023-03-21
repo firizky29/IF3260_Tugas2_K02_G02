@@ -23,6 +23,9 @@ export default class WebGL2Handler {
       fragmentShader
     );
 
+    this._gl.enable(this._gl.CULL_FACE);
+    this._gl.cullFace(this._gl.FRONT);
+
     this._glComponent.positionBuffer = this._gl.createBuffer();
 
     this._glComponent.colorBuffer = this._gl.createBuffer();

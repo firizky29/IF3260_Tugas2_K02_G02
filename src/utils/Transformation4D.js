@@ -57,10 +57,10 @@ const TransformationMatrix4D = {
 
   projection(width, height, depth) {
     return new Matrix(4, 4, [
-      [2 / width, 0, 0, 0],
-      [0, -2 / height, 0, 0],
-      [0, 0, 2 / depth, 0],
-      [-1, 1, 0, 1],
+      [1, 0, 0, 0],
+      [0, 1, 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 0, 1],
     ]);
   },
 };
