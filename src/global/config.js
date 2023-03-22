@@ -1,28 +1,44 @@
 const CONFIG = {
-  VERTEX_SHADER: `#version 300 es
+	VERTEX_SHADER: `#version 300 es
 
-    in vec4 a_position;
-    in vec4 a_color;
-    uniform mat4 u_matrix;
+		in vec4 a_position;
+		in vec4 a_color;
+		in vec4 a_normal;
 
-    out vec4 v_color;
+		uniform mat4 projection, modelView, normalMat;
 
-    void main() {
-      gl_Position = u_matrix * a_position;
-      v_color = a_color;
-    }
+		out vec3 lighting;
+
+
+		out vec4 v_color;
+
+		void main() {
+			gl_Position = projection * modelView * a_position;
+
+			vec3 ambientLight = vec3(0.5, 0.5, 0.5);
+			vec3 diffuseColor = vec3(1, 1, 1);
+			vec3 lightPosition = normalize(vec3(0.5, 1, -1));
+
+			vec4 transformedNormal = normalMat * a_normal;
+
+			float cos = max(dot(transformedNormal.xyz, lightPosition), 0.0);
+			lighting = ambientLight + (diffuseColor * cos);
+	
+			v_color = vec4(a_color.rgb * lighting, 1.0);
+
+		}
     `,
-  FRAGMENT_SHADER: `#version 300 es
+	FRAGMENT_SHADER: `#version 300 es
 
-  precision highp float;
-  in vec4 v_color;
-  
-  out vec4 outColor;
-  
-  void main() {
-    outColor = v_color;
-  }
-  `,
+		precision highp float;
+		in vec4 v_color;
+		
+		out vec4 outColor;
+		
+		void main() {
+			outColor = v_color;
+		}
+	`,
 };
 
 export default CONFIG;

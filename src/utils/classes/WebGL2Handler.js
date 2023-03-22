@@ -1,4 +1,5 @@
 import CONFIG from '../../global/config.js';
+import MatrixOp from '../MatrixOp.js';
 import { Transform, TransformationMatrix4D } from '../Transformation4D.js';
 
 export default class WebGL2Handler {
@@ -28,6 +29,8 @@ export default class WebGL2Handler {
 		this._glComponent.positionBuffer = this._gl.createBuffer();
 
 		this._glComponent.colorBuffer = this._gl.createBuffer();
+
+		this._glComponent.normalBuffer = this._gl.createBuffer();
 
 		this._gl.useProgram(this._glComponent.program);
 		return this;
@@ -60,12 +63,23 @@ export default class WebGL2Handler {
 		return this;
 	}
 
+	setNormals(normals) {
+		this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.normalBuffer);
+		this._gl.bufferData(
+			this._gl.ARRAY_BUFFER,
+			new Float32Array(normals),
+			this._gl.STATIC_DRAW
+		);
+
+		return this;
+	}
+
 	getGl() {
 		return this._gl;
 	}
 
 	clearBuffer() {
-		this._gl.clearColor(0, 0, 0, 0);
+		this._gl.clearColor(0, 0, 0, 1.0);
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
 		return this;
 	}
@@ -81,10 +95,26 @@ export default class WebGL2Handler {
 			'a_color'
 		);
 
+		const normalAttributeLocation = this._gl.getAttribLocation(
+			this._glComponent.program,
+			'a_normal'
+		);
+
 		const matrixLocation = this._gl.getUniformLocation(
 			this._glComponent.program,
-			'u_matrix'
+			'modelView'
 		);
+
+		const projectionMatrixLocation = this._gl.getUniformLocation(
+			this._glComponent.program,
+			'projection'
+		);
+
+		const normalMatrixLocation = this._gl.getUniformLocation(
+			this._glComponent.program,
+			'normalMat'
+		);
+
 
 		this._gl.viewport(0, 0, this._gl.canvas.width, this._gl.canvas.height);
 
@@ -125,6 +155,18 @@ export default class WebGL2Handler {
 			offset
 		);
 
+		this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.normalBuffer);
+
+		this._gl.enableVertexAttribArray(normalAttributeLocation);
+		this._gl.vertexAttribPointer(
+			normalAttributeLocation,
+			size,
+			type,
+			normalize,
+			stride,
+			offset
+		);
+
 		let matrix = TransformationMatrix4D.projection(
 			this._gl.canvas.clientWidth,
 			this._gl.canvas.clientHeight,
@@ -136,7 +178,17 @@ export default class WebGL2Handler {
 		matrix = Transform.zRotate(matrix, transformationProps.rotation[2]);
 		matrix = Transform.scale(matrix, ...transformationProps.scale);
 
+		const projectionMatrix = TransformationMatrix4D.projection(
+			this._gl.canvas.clientWidth,
+			this._gl.canvas.clientHeight,
+			400
+		)		
+		
+		const normalMatrix = MatrixOp.copy(matrix).invert().transpose();
+
 		this._gl.uniformMatrix4fv(matrixLocation, false, matrix.flatten());
+		this._gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix.flatten());
+		this._gl.uniformMatrix4fv(normalMatrixLocation, false, normalMatrix.flatten());
 
 		this._gl.drawArrays(primitiveType, offset, drawCounter);
 	}

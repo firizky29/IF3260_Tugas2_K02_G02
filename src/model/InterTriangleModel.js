@@ -6,7 +6,10 @@ class InterTriangle {
 		this._oRadius = oRadius;
 		this._cornerW = cornerW;
 		this._cornerH = cornerH;
-		this._triangles = [[], [], [], []];
+		// const red = [255, 0, 0];
+		const color = [255, 255, 255];
+		this._triangles = [[], [], [], []]
+		this._triangleColors = [color, color, color, color];
 	}
 
 	init() {
@@ -98,11 +101,8 @@ class InterTriangle {
 	getModel() {
 		let vertices = []
 		let colors = []
+		let normals = []
 		for (let i = 0; i < 4; i++) {
-			let triangleColor = []
-			for (let j = 0; j < 3; j++) {
-				triangleColor.push(Math.round(Math.random() * 255))
-			}
 			for (let j = 0; j < 4; j++) {
 				let idx1 = j;
 				let idx2 = (j + 3) % 4;
@@ -114,14 +114,15 @@ class InterTriangle {
 					corners.push(this._triangles[i][id1][idx2])
 					corners.push(this._triangles[i][id2][idx2])
 					corners.push(this._triangles[i][id2][idx1])
-					Render.rectangle(vertices, colors, corners, triangleColor)
+					Render.rectangle(vertices, colors, normals, corners, this._triangleColors[i])
 				}
 			}
 		}
 
 		return {
 			vertices: vertices,
-			colors: colors
+			colors: colors,
+			normals: normals
 		}
 	}
 }
