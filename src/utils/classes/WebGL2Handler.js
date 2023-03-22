@@ -2,178 +2,179 @@ import CONFIG from '../../global/config.js';
 import { Transform, TransformationMatrix4D } from '../Transformation4D.js';
 
 export default class WebGL2Handler {
-  constructor(canvas) {
-    this._canvas = canvas;
-    this._gl = this._canvas.getContext('webgl2');
-    this._glComponent = {};
-  }
+	constructor(canvas) {
+		this._canvas = canvas;
+		this._gl = this._canvas.getContext('webgl2');
+		this._glComponent = {};
+	}
 
-  init() {
-    const vertexShader = this._createShader(
-      this._gl.VERTEX_SHADER,
-      CONFIG.VERTEX_SHADER
-    );
-    const fragmentShader = this._createShader(
-      this._gl.FRAGMENT_SHADER,
-      CONFIG.FRAGMENT_SHADER
-    );
+	init() {
+		const vertexShader = this._createShader(
+			this._gl.VERTEX_SHADER,
+			CONFIG.VERTEX_SHADER
+		);
+		const fragmentShader = this._createShader(
+			this._gl.FRAGMENT_SHADER,
+			CONFIG.FRAGMENT_SHADER
+		);
 
-    this._glComponent.program = this._createProgram(
-      vertexShader,
-      fragmentShader
-    );
+		this._glComponent.program = this._createProgram(
+			vertexShader,
+			fragmentShader
+		);
 
-    this._gl.enable(this._gl.CULL_FACE);
-    this._gl.cullFace(this._gl.FRONT);
+		this._gl.enable(this._gl.DEPTH_TEST); // enabled by default, but let's be SURE.
 
-    this._glComponent.positionBuffer = this._gl.createBuffer();
+		this._glComponent.positionBuffer = this._gl.createBuffer();
 
-    this._glComponent.colorBuffer = this._gl.createBuffer();
+		this._glComponent.colorBuffer = this._gl.createBuffer();
 
-    this._gl.useProgram(this._glComponent.program);
-    return this;
-  }
+		this._gl.useProgram(this._glComponent.program);
+		return this;
+	}
 
-  setPosition(positions) {
-    this._gl.bindBuffer(
-      this._gl.ARRAY_BUFFER,
-      this._glComponent.positionBuffer
-    );
-    this._gl.bufferData(
-      this._gl.ARRAY_BUFFER,
-      new Float32Array(positions),
-      this._gl.STATIC_DRAW
-    );
+	setVertices(vertices) {
+		this._gl.bindBuffer(
+			this._gl.ARRAY_BUFFER,
+			this._glComponent.positionBuffer
+		); 
+		this._gl.bufferData(
+			this._gl.ARRAY_BUFFER,
+			new Float32Array(vertices),
+			this._gl.STATIC_DRAW
+		);
 
-    return this;
-  }
+		// console.log(vertices)
 
-  setColor(colors) {
-    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.colorBuffer);
-    this._gl.bufferData(
-      this._gl.ARRAY_BUFFER,
-      new Uint8Array(colors),
-      this._gl.STATIC_DRAW
-    );
+		return this;
+	}
 
-    return this;
-  }
+	setColors(colors) {
+		this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.colorBuffer);
+		this._gl.bufferData(
+			this._gl.ARRAY_BUFFER,
+			new Uint8Array(colors),
+			this._gl.STATIC_DRAW
+		);
 
-  getGl() {
-    return this._gl;
-  }
+		return this;
+	}
 
-  clearBuffer() {
-    this._gl.clearColor(0, 0, 0, 0);
-    this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
-    return this;
-  }
+	getGl() {
+		return this._gl;
+	}
 
-  render(settings, transformationProps) {
-    const positionAttributeLocation = this._gl.getAttribLocation(
-      this._glComponent.program,
-      'a_position'
-    );
+	clearBuffer() {
+		this._gl.clearColor(0, 0, 0, 0);
+		this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
+		return this;
+	}
 
-    const colorAttributeLocation = this._gl.getAttribLocation(
-      this._glComponent.program,
-      'a_color'
-    );
+	render(settings, transformationProps) {
+		const positionAttributeLocation = this._gl.getAttribLocation(
+			this._glComponent.program,
+			'a_position'
+		);
 
-    const matrixLocation = this._gl.getUniformLocation(
-      this._glComponent.program,
-      'u_matrix'
-    );
+		const colorAttributeLocation = this._gl.getAttribLocation(
+			this._glComponent.program,
+			'a_color'
+		);
 
-    this._gl.viewport(0, 0, this._gl.canvas.width, this._gl.canvas.height);
+		const matrixLocation = this._gl.getUniformLocation(
+			this._glComponent.program,
+			'u_matrix'
+		);
 
-    const {
-      size = 3,
-      type = this._gl.FLOAT,
-      normalize = false,
-      stride = 0,
-      offset = 0,
-      primitiveType,
-      drawCounter,
-    } = settings;
+		this._gl.viewport(0, 0, this._gl.canvas.width, this._gl.canvas.height);
 
-    this._gl.bindBuffer(
-      this._gl.ARRAY_BUFFER,
-      this._glComponent.positionBuffer
-    );
+		const {
+			size = 3,
+			type = this._gl.FLOAT,
+			normalize = false,
+			stride = 0,
+			offset = 0,
+			primitiveType,
+			drawCounter,
+		} = settings;
 
-    this._gl.enableVertexAttribArray(positionAttributeLocation);
-    this._gl.vertexAttribPointer(
-      positionAttributeLocation,
-      size,
-      type,
-      normalize,
-      stride,
-      offset
-    );
+		this._gl.bindBuffer(
+			this._gl.ARRAY_BUFFER,
+			this._glComponent.positionBuffer
+		);
 
-    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.colorBuffer);
+		this._gl.enableVertexAttribArray(positionAttributeLocation);
+		this._gl.vertexAttribPointer(
+			positionAttributeLocation,
+			size,
+			type,
+			normalize,
+			stride,
+			offset
+		);
 
-    this._gl.enableVertexAttribArray(colorAttributeLocation);
-    this._gl.vertexAttribPointer(
-      colorAttributeLocation,
-      size,
-      this._gl.UNSIGNED_BYTE,
-      true,
-      stride,
-      offset
-    );
+		this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.colorBuffer);
 
-    let matrix = TransformationMatrix4D.projection(
-      this._gl.canvas.clientWidth,
-      this._gl.canvas.clientHeight,
-      400
-    );
-    matrix = Transform.translate(matrix, ...transformationProps.translation);
-    matrix = Transform.xRotate(matrix, transformationProps.rotation[0]);
-    matrix = Transform.yRotate(matrix, transformationProps.rotation[1]);
-    matrix = Transform.zRotate(matrix, transformationProps.rotation[2]);
-    matrix = Transform.scale(matrix, ...transformationProps.scale);
+		this._gl.enableVertexAttribArray(colorAttributeLocation);
+		this._gl.vertexAttribPointer(
+			colorAttributeLocation,
+			size,
+			this._gl.UNSIGNED_BYTE,
+			true,
+			stride,
+			offset
+		);
 
-    this._gl.uniformMatrix4fv(matrixLocation, false, matrix.flatten());
+		let matrix = TransformationMatrix4D.projection(
+			this._gl.canvas.clientWidth,
+			this._gl.canvas.clientHeight,
+			400
+		);
+		matrix = Transform.translate(matrix, ...transformationProps.translation);
+		matrix = Transform.xRotate(matrix, transformationProps.rotation[0]);
+		matrix = Transform.yRotate(matrix, transformationProps.rotation[1]);
+		matrix = Transform.zRotate(matrix, transformationProps.rotation[2]);
+		matrix = Transform.scale(matrix, ...transformationProps.scale);
 
-    this._gl.drawArrays(primitiveType, offset, drawCounter);
-  }
+		this._gl.uniformMatrix4fv(matrixLocation, false, matrix.flatten());
 
-  _createShader(type, source) {
-    const shader = this._gl.createShader(type);
-    this._gl.shaderSource(shader, source);
-    this._gl.compileShader(shader);
+		this._gl.drawArrays(primitiveType, offset, drawCounter);
+	}
 
-    const isSuccess = this._gl.getShaderParameter(
-      shader,
-      this._gl.COMPILE_STATUS
-    );
+	_createShader(type, source) {
+		const shader = this._gl.createShader(type);
+		this._gl.shaderSource(shader, source);
+		this._gl.compileShader(shader);
 
-    if (!isSuccess) {
-      console.error(this._gl.getShaderInfoLog(shader));
-      this._gl.deleteShader(shader);
-    }
+		const isSuccess = this._gl.getShaderParameter(
+			shader,
+			this._gl.COMPILE_STATUS
+		);
 
-    return shader;
-  }
+		if (!isSuccess) {
+			console.error(this._gl.getShaderInfoLog(shader));
+			this._gl.deleteShader(shader);
+		}
 
-  _createProgram(vertexShader, fragmentShader) {
-    const program = this._gl.createProgram();
-    this._gl.attachShader(program, vertexShader);
-    this._gl.attachShader(program, fragmentShader);
-    this._gl.linkProgram(program);
+		return shader;
+	}
 
-    const isSuccess = this._gl.getProgramParameter(
-      program,
-      this._gl.LINK_STATUS
-    );
+	_createProgram(vertexShader, fragmentShader) {
+		const program = this._gl.createProgram();
+		this._gl.attachShader(program, vertexShader);
+		this._gl.attachShader(program, fragmentShader);
+		this._gl.linkProgram(program);
 
-    if (!isSuccess) {
-      console.log(this._gl.getProgramInfoLog(program));
-      this._gl.deleteProgram(program);
-    }
+		const isSuccess = this._gl.getProgramParameter(
+			program,
+			this._gl.LINK_STATUS
+		);
 
-    return program;
-  }
+		if (!isSuccess) {
+			console.log(this._gl.getProgramInfoLog(program));
+			this._gl.deleteProgram(program);
+		}
+
+		return program;
+	}
 }

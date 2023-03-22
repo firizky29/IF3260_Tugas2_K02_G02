@@ -1,60 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/style.css" />
-    <script src="index.js" type="module" defer></script>
-    <title>3D Hollow Object</title>
-  </head>
-  <body>
-    <div class="container">
-      <div class="object-container">
-        <div class="canvas__display">
-          <canvas id="canvas" width="800" height="800"> </canvas>
-        </div>
-        <div class="canvas__controller">
-          <b>Control Panel</b>
-          <div class="control-panel">
-            <div class="input-row">
-              <label for="projection">Projection View:</label>
-              <select name="projection" id="" style="margin-left: 8px">
-                <option value="Orthographic">Orthographic</option>
-                <option value="Oblique">Oblique</option>
-                <option value="Perspective">Perspective</option>
-              </select>
-            </div>
-            <p><b>Translate</b></p>
-            <div class="input-row">
-              <label for="tx">x:</label>
-              <input type="range" min="0" max="800" name="tx" id="tx" />
-              <label for="ty" style="margin-left: 12px">y:</label>
-              <input type="range" min="0" max="800" name="ty" id="ty" />
-              <label for="tz" style="margin-left: 12px">z:</label>
-              <input type="range" min="0" max="400" name="tz" id="tz" />
-            </div>
-            <p><b>Rotation</b></p>
-            <div class="input-row">
-              <label for="rx">x:</label>
-              <input type="range" min="0" max="720" name="rx" id="rx" />
-              <label for="ry" style="margin-left: 12px">y:</label>
-              <input type="range" min="0" max="720" name="ry" id="ry" />
-              <label for="rz" style="margin-left: 12px">z:</label>
-              <input type="range" min="0" max="720" name="rz" id="rz" />
-            </div>
-            <p><b>Scale</b></p>
-            <div class="input-row">
-              <label for="sx">x:</label>
-              <input type="range" name="sx" id="sx" step="0.01" max="2" />
-              <label for="sy" style="margin-left: 12px">y:</label>
-              <input type="range" name="sy" id="sy" step="0.01" max="2" />
-              <label for="sz" style="margin-left: 12px">z:</label>
-              <input type="range" name="sz" id="sz" step="0.01" max="2" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="./css/style.css" />
+	<script src="index.js" type="module" defer></script>
+	<title>3D Hollow Object</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="object-container">
+			<div class="canvas__display">
+				<canvas id="canvas" width="800" height="800"> </canvas>
+			</div>
+			<div class="canvas__controller">
+				<b>Control Panel</b>
+				<div class="control-panel">
+					<div class="input-row">
+						<label for="model">Model:</label>
+						<!-- create a load button -->
+						<button name="model" id="model">
+							Open Model File
+						</button>
+					</div>
+					<div class="input-row">
+						<label for="projection">Projection View:</label>
+						<select name="projection" id="projection" style="margin-left: 8px">
+							<option value="orth">Orthographic</option>
+							<option value="oblique">Oblique</option>
+							<option value="perspective">Perspective</option>
+						</select>
+					</div>
+					<p><b>Translate</b></p>
+					<div class="input-row">
+						<label for="tx">x:</label>
+						<input type="range" min="-1" max="1" step="0.01" name="tx" id="tx" />
+						<label for="ty" style="margin-left: 12px">y:</label>
+						<input type="range" min="-1" max="1" step="0.01" name="ty" id="ty" />
+						<label for="tz" style="margin-left: 12px">z:</label>
+						<input type="range" min="-1" max="1" step="0.01" name="tz" id="tz" />
+					</div>
+					<p><b>Rotation</b></p>
+					<div class="input-row">
+						<label for="rx">x:</label>
+						<input type="range" min="0" max="720" name="rx" id="rx" />
+						<label for="ry" style="margin-left: 12px">y:</label>
+						<input type="range" min="0" max="720" name="ry" id="ry" />
+						<label for="rz" style="margin-left: 12px">z:</label>
+						<input type="range" min="0" max="720" name="rz" id="rz" />
+					</div>
+					<p><b>Scale</b></p>
+					<div class="input-row">
+						<label for="sx">x:</label>
+						<input type="range" name="sx" id="sx" step="0.01" max="2" />
+						<label for="sy" style="margin-left: 12px">y:</label>
+						<input type="range" name="sy" id="sy" step="0.01" max="2" />
+						<label for="sz" style="margin-left: 12px">z:</label>
+						<input type="range" name="sz" id="sz" step="0.01" max="2" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
 </html>
