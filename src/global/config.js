@@ -7,13 +7,22 @@ const CONFIG = {
 
 		uniform mat4 projection, modelView, normalMat;
 
+		uniform int useLighting;
+		uniform float fudgeFactor;
+
 		out vec3 lighting;
 
 
 		out vec4 v_color;
 
 		void main() {
-			gl_Position = projection * modelView * a_position;
+			vec4 pos = projection * modelView * a_position;
+			if(fudgeFactor > 0.0){
+				float zToDivideBy = 1.0 + pos.z * fudgeFactor;
+ 				gl_Position = vec4(pos.xy / zToDivideBy, pos.zw);
+			} else {
+				gl_Position = pos;
+			}
 
 			vec3 ambientLight = vec3(0.5, 0.5, 0.5);
 			vec3 diffuseColor = vec3(1, 1, 1);
@@ -23,8 +32,12 @@ const CONFIG = {
 
 			float cos = max(dot(transformedNormal.xyz, lightPosition), 0.0);
 			lighting = ambientLight + (diffuseColor * cos);
-	
-			v_color = vec4(a_color.rgb * lighting, 1.0);
+			
+			if(useLighting == 0){
+				v_color = a_color;
+			} else{
+				v_color = vec4(a_color.rgb * lighting, 1.0);
+			}
 
 		}
     `,

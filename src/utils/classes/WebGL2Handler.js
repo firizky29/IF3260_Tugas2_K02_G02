@@ -47,7 +47,6 @@ export default class WebGL2Handler {
 			this._gl.STATIC_DRAW
 		);
 
-		// console.log(vertices)
 
 		return this;
 	}
@@ -84,7 +83,7 @@ export default class WebGL2Handler {
 		return this;
 	}
 
-	render(settings, transformationProps) {
+	render(settings, state) {
 		const positionAttributeLocation = this._gl.getAttribLocation(
 			this._glComponent.program,
 			'a_position'
@@ -113,6 +112,16 @@ export default class WebGL2Handler {
 		const normalMatrixLocation = this._gl.getUniformLocation(
 			this._glComponent.program,
 			'normalMat'
+		);
+
+		const useLighting = this._gl.getUniformLocation(
+			this._glComponent.program,
+			'useLighting'
+		);
+
+		const fudgeFactor = this._gl.getUniformLocation(
+			this._glComponent.program,
+			'fudgeFactor'
 		);
 
 
@@ -172,23 +181,22 @@ export default class WebGL2Handler {
 			this._gl.canvas.clientHeight,
 			400
 		);
-		matrix = Transform.translate(matrix, ...transformationProps.translation);
-		matrix = Transform.xRotate(matrix, transformationProps.rotation[0]);
-		matrix = Transform.yRotate(matrix, transformationProps.rotation[1]);
-		matrix = Transform.zRotate(matrix, transformationProps.rotation[2]);
-		matrix = Transform.scale(matrix, ...transformationProps.scale);
+		matrix = Transform.translate(matrix, ...state.translation);
+		matrix = Transform.xRotate(matrix, state.rotation[0]);
+		matrix = Transform.yRotate(matrix, state.rotation[1]);
+		matrix = Transform.zRotate(matrix, state.rotation[2]);
+		matrix = Transform.scale(matrix, ...state.scale);
 
-		const projectionMatrix = TransformationMatrix4D.projection(
-			this._gl.canvas.clientWidth,
-			this._gl.canvas.clientHeight,
-			400
-		)		
+		const projectionMatrix = TransformationMatrix4D.projection(state.projectionType, state.obliqueTetha, state.obliquePhi)
 		
 		const normalMatrix = MatrixOp.copy(matrix).invert().transpose();
 
 		this._gl.uniformMatrix4fv(matrixLocation, false, matrix.flatten());
 		this._gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix.flatten());
 		this._gl.uniformMatrix4fv(normalMatrixLocation, false, normalMatrix.flatten());
+
+		this._gl.uniform1i(useLighting, state.useLighting);
+		this._gl.uniform1f(fudgeFactor, state.fudgeFactor);
 
 		this._gl.drawArrays(primitiveType, offset, drawCounter);
 	}

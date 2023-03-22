@@ -131,6 +131,11 @@ const state = {
 		Converter.degToRad(0),
 	],
 	scale: [1, 1, 1],
+	projectionType: 'orthographic',
+	useLighting: true,
+	fudgeFactor: 0,
+	obliqueTetha: 0,
+	obliquePhi: 0,
 };
 const renderSettings = {
 	primitiveType: webgl2.getGl().TRIANGLES,
@@ -191,6 +196,28 @@ const eventHandler = {
 			}
 			input.click();
 		}
+	},
+
+	updateProjectionType() {
+		return (event) => {
+			state.projectionType = event.target.value;
+
+			if(state.projectionType === 'perspective') {
+				state.fudgeFactor = 0.3;
+			} else {
+				state.fudgeFactor = 0;
+			}
+
+			if(state.projectionType === 'oblique') {
+				state.obliqueTetha = Converter.degToRad(63.5);
+				state.obliquePhi = Converter.degToRad(63.5);
+			} else {
+				state.obliqueTetha = 0;
+				state.obliquePhi = 0;
+			}
+
+			webgl2.clearBuffer().render(renderSettings, state);
+		};
 	}
 }
 
@@ -241,6 +268,11 @@ UIHandler.initSlider('#sz', {
 
 UIHandler.initButton('#model', {
 	handlerFn: eventHandler.openModel(),
+})
+
+UIHandler.initRadio('#projection', {
+	initialValue: state.projectionType,
+	handlerFn: eventHandler.updateProjectionType(),
 })
 
 webgl2

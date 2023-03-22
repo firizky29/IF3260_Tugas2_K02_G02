@@ -55,13 +55,37 @@ const TransformationMatrix4D = {
     ]);
   },
 
-  projection(width, height, depth) {
-    return new Matrix(4, 4, [
-      [1, 0, 0, 0],
-      [0, 1, 0, 0],
-      [0, 0, 1, 0],
-      [0, 0, 0, 1],
-    ]);
+  projection(type, obliqueTetha, obliquePhi) {
+    switch (type) {
+      case 'orthographic':
+        return new Matrix(4, 4, [
+          [1, 0, 0, 0],
+          [0, 1, 0, 0],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1],
+        ]);
+      case 'perspective':
+        return new Matrix(4, 4, [
+          [1, 0, 0, 0],
+          [0, 1, 0, 0],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1],
+        ]);
+      case 'oblique':
+        return new Matrix(4, 4, [
+          [1, 0, 0, 0],
+          [0, 1, 0, 0],
+          [-1/Math.tan(obliqueTetha), -1/Math.tan(obliquePhi), 1, 0],
+          [0, 0, 0, 1],
+        ]);
+      default:
+        return new Matrix(4, 4, [
+          [1, 0, 0, 0],
+          [0, 1, 0, 0],
+          [0, 0, 1, 0],
+          [0, 0, 0, 1],
+        ]);
+    }
   },
 };
 
