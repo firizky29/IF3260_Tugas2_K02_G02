@@ -218,6 +218,13 @@ const eventHandler = {
 
 			webgl2.clearBuffer().render(renderSettings, state);
 		};
+	},
+
+	updateShadingState(){
+		return (event) => {
+			state.useLighting = event.target.checked;
+			webgl2.clearBuffer().render(renderSettings, state);
+		}
 	}
 }
 
@@ -275,6 +282,12 @@ UIHandler.initRadio('#projection', {
 	handlerFn: eventHandler.updateProjectionType(),
 })
 
+UIHandler.initCheckbox('#shading', {
+	initialValue: state.useLighting,
+	handlerFn: eventHandler.updateShadingState()
+})
+
+UIHandler
 webgl2
 	.clearBuffer()
 	.setVertices(state.model.vertices)

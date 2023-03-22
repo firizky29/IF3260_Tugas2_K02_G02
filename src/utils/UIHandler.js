@@ -28,6 +28,17 @@ const UIHandler = {
 		button.addEventListener('click', (event) => {
 			handlerFn(event);
 		});
+	},
+
+	initCheckbox(checkboxSelector, options) {
+		const checkbox = document.querySelector(checkboxSelector);
+		let { initialValue = false, handlerFn } = options;
+		checkbox.checked = initialValue;
+
+		checkbox.addEventListener('change', (event) => {
+			const value = event.target.checked;
+			handlerFn(event, value);
+		});
 	}
 };
 

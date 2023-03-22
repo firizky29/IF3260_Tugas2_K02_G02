@@ -7,7 +7,7 @@ class InterTriangle {
 		this._cornerW = cornerW;
 		this._cornerH = cornerH;
 		// const red = [255, 0, 0];
-		const color = [255, 255, 255];
+		const color = [200, 200, 200];
 		this._triangles = [[], [], [], []]
 		this._triangleColors = [color, color, color, color];
 	}
