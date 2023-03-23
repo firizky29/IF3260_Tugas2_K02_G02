@@ -75,7 +75,7 @@ const TransformationMatrix4D = {
         return new Matrix(4, 4, [
           [1, 0, 0, 0],
           [0, 1, 0, 0],
-          [-1/Math.tan(obliqueTetha), -1/Math.tan(obliquePhi), 1, 0],
+          [-1 / Math.tan(obliqueTetha), -1 / Math.tan(obliquePhi), 1, 0],
           [0, 0, 0, 1],
         ]);
       default:

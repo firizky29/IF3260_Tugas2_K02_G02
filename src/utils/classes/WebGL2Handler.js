@@ -1,5 +1,8 @@
 import CONFIG from '../../global/config.js';
+import CameraOp from '../CameraOp.js';
+import Converter from '../Converter.js';
 import MatrixOp from '../MatrixOp.js';
+import Matrix from './Matrix.js';
 import { Transform, TransformationMatrix4D } from '../Transformation4D.js';
 
 export default class WebGL2Handler {
@@ -10,29 +13,29 @@ export default class WebGL2Handler {
   }
 
   init() {
-    const vertexShader = this._createShader(
-      this._gl.VERTEX_SHADER,
-      CONFIG.VERTEX_SHADER
-    );
-    const fragmentShader = this._createShader(
-      this._gl.FRAGMENT_SHADER,
-      CONFIG.FRAGMENT_SHADER
-    );
+    const shadersConfig = [
+      {
+        type: this._gl.VERTEX_SHADER,
+        source: CONFIG.VERTEX_SHADER,
+      },
+      {
+        type: this._gl.FRAGMENT_SHADER,
+        source: CONFIG.FRAGMENT_SHADER,
+      },
+    ];
+    const buffers = [
+      'vertexBuffer',
+      'normalBuffer',
+      'colorBuffer',
+      'camPositionBuffer',
+      'camIndicesBuffer',
+    ];
 
-    this._glComponent.program = this._createProgram(
-      vertexShader,
-      fragmentShader
-    );
+    this._glComponent.program = this._createProgram(shadersConfig);
+
+    this._createBuffers(buffers);
 
     this._gl.enable(this._gl.DEPTH_TEST); // enabled by default, but let's be SURE.
-
-    this._glComponent.vertexBuffer = this._gl.createBuffer();
-
-    this._glComponent.colorBuffer = this._gl.createBuffer();
-
-    this._glComponent.normalBuffer = this._gl.createBuffer();
-    this._glComponent.camIndicesBuffer = this._gl.createBuffer();
-    this._glComponent.camPositionBuffer = this._gl.createBuffer();
 
     this._gl.useProgram(this._glComponent.program);
     return this;
@@ -122,7 +125,49 @@ export default class WebGL2Handler {
       'fudgeFactor'
     );
 
+    // Camera properties
+    const aspect = 1;
+    const near = 0.01;
+    const far = 5;
+
+    const camSettings = {
+      rotation: 0,
+      camFieldOfView: 120,
+      camPosX: 0,
+      camPosY: 0,
+      camPosZ: -2,
+    };
+
+    const perspectiveProjectionMatrix = CameraOp.perspective(
+      Converter.degToRad(camSettings.camFieldOfView),
+      aspect,
+      near,
+      far
+    );
+
+    const cameraPos = new Matrix(1, 3, [
+      [camSettings.camPosX, camSettings.camPosY, camSettings.camPosZ],
+    ]);
+
+    const target = new Matrix(1, 3, [[0, 0, 0]]);
+    const up = new Matrix(1, 3, [[0, 1, 0]]);
+    const cameraMatrix = CameraOp.lookAt(cameraPos, target, up);
+
+    let worldMatrix = TransformationMatrix4D.yRotation(
+      Converter.degToRad(camSettings.rotation)
+    );
+
+    worldMatrix = Transform.xRotate(
+      worldMatrix,
+      Converter.degToRad(camSettings.rotation)
+    );
+
+    worldMatrix = Transform.translate(worldMatrix, -0.03, -0.07, -0.01);
+
+    // -----------------------
+
     this._gl.viewport(0, 0, this._gl.canvas.width, this._gl.canvas.height);
+    this._gl.scissor(0, 0, this._gl.canvas.width, this._gl.canvas.height);
 
     const {
       size = 3,
@@ -170,17 +215,23 @@ export default class WebGL2Handler {
       offset
     );
 
-    let matrix = TransformationMatrix4D.projection(
-      this._gl.canvas.clientWidth,
-      this._gl.canvas.clientHeight,
-      400
-    );
+    const viewMatrix = cameraMatrix.invert();
+    let matrix = MatrixOp.multiply(viewMatrix, perspectiveProjectionMatrix);
+
+    // let matrix = TransformationMatrix4D.projection(
+    //   this._gl.canvas.clientWidth,
+    //   this._gl.canvas.clientHeight,
+    //   400
+    // );
+    matrix = MatrixOp.multiply(worldMatrix, matrix);
+    console.log(worldMatrix);
+    console.log(matrix);
     matrix = Transform.translate(matrix, ...state.translation);
     matrix = Transform.xRotate(matrix, state.rotation[0]);
     matrix = Transform.yRotate(matrix, state.rotation[1]);
     matrix = Transform.zRotate(matrix, state.rotation[2]);
     matrix = Transform.scale(matrix, ...state.scale);
-
+    console.log(matrix);
     const projectionMatrix = TransformationMatrix4D.projection(
       state.projectionType,
       state.obliqueTetha,
@@ -225,10 +276,12 @@ export default class WebGL2Handler {
     return shader;
   }
 
-  _createProgram(vertexShader, fragmentShader) {
+  _createProgram(shadersConfig) {
     const program = this._gl.createProgram();
-    this._gl.attachShader(program, vertexShader);
-    this._gl.attachShader(program, fragmentShader);
+    for (let shaderConfig of shadersConfig) {
+      const shader = this._createShader(shaderConfig.type, shaderConfig.source);
+      this._gl.attachShader(program, shader);
+    }
     this._gl.linkProgram(program);
 
     const isSuccess = this._gl.getProgramParameter(
@@ -244,57 +297,9 @@ export default class WebGL2Handler {
     return program;
   }
 
-  // prettier-ignore
-  _createCameraBufferInfo(scale = 1) {
-    const positions = [
-      -1, -1, 1,  // cube vertices
-      1, -1, 1,
-      -1, 1, 1,
-      1, 1, 1,
-      -1, -1, 3,
-      1, -1, 3,
-      -1, 1, 3,
-      1, 1, 3,
-      0, 0, 1,  // cone tip
-    ];
-
-    const indices = [
-      0, 1, 1, 3, 3, 2, 2, 0, // cube indices
-      4, 5, 5, 7, 7, 6, 6, 4,
-      0, 4, 1, 5, 3, 7, 2, 6,
-    ];
-
-    const numSegments = 6;
-    const coneBaseIndex = positions.length / 3;
-    const coneTipIndex = coneBaseIndex - 1;
-    for (let i = 0; i < numSegments; ++i) {
-      const u = i / numSegments;
-      const angle = u * Math.PI * 2;
-      const x = Math.cos(angle);
-      const y = Math.sin(angle);
-      positions.push(x, y, 0);
-      // line from tip to edge
-      indices.push(coneTipIndex, coneBaseIndex + i);
-      // line from point on edge to next point on edge
-      indices.push(coneBaseIndex + i, coneBaseIndex + (i + 1) % numSegments);
+  _createBuffers(buffers) {
+    for (let buffer of buffers) {
+      this._glComponent[buffer] = this._gl.createBuffer();
     }
-
-    positions.forEach((v, idx) => {
-      positions[idx] *= scale;
-    });
-
-    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.camPositionBuffer);
-    this._gl.bufferData(
-      this._gl.ARRAY_BUFFER,
-      new Float32Array(positions),
-      this._gl.STATIC_DRAW
-    );
-
-    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._glComponent.camIndicesBuffer);
-    this._gl.bufferData(
-      this._gl.ARRAY_BUFFER,
-      new Float32Array(indices),
-      this._gl.STATIC_DRAW
-    );
   }
 }
