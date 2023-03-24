@@ -193,7 +193,6 @@ UIHandler.initSlider('#cameraRotation', {
   handlerFn: eventHandler.updateCameraRotation(),
 });
 
-UIHandler;
 webgl2
   .clearBuffer()
   .setVertices(state.model.vertices)
