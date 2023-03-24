@@ -46,6 +46,7 @@ const eventHandler = {
     return (event, value) => {
       state.scale[index] = value;
       webgl2.clearBuffer().render(renderSettings, state);
+      console.log(state);
     };
   },
 
@@ -199,3 +200,18 @@ webgl2
   .setColors(state.model.colors)
   .setNormals(state.model.normals)
   .render(renderSettings, state);
+
+  const saveToJSON = () => {
+    let { vertices, colors, normals } = state.model;
+    
+    const json = JSON.stringify({vertices, colors, normals});
+    const data = new Blob([json], { type: "text/plain" });
+    const textFile = window.URL.createObjectURL(data);
+    const link = document.createElement("a");
+    link.setAttribute("download", "shapes.json");
+    link.href = textFile;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  document.getElementById("save").addEventListener("click", saveToJSON);
