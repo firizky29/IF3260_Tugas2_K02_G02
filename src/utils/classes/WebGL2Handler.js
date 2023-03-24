@@ -127,43 +127,32 @@ export default class WebGL2Handler {
 
     // Camera properties
     const aspect = 1;
-    const near = 0.01;
+    const near = 0.5;
     const far = 5;
+    const radius = state.cameraRadius;
 
     const camSettings = {
-      rotation: 0,
-      camFieldOfView: 120,
-      camPosX: 0,
-      camPosY: 0,
-      camPosZ: -2,
+      camFieldOfView: 70,
+      camRotation: state.cameraRotation,
     };
 
-    const perspectiveProjectionMatrix = CameraOp.perspective(
-      Converter.degToRad(camSettings.camFieldOfView),
-      aspect,
-      near,
-      far
-    );
-
-    const cameraPos = new Matrix(1, 3, [
-      [camSettings.camPosX, camSettings.camPosY, camSettings.camPosZ],
-    ]);
+    let worldMatrix = TransformationMatrix4D.yRotation(camSettings.camRotation);
 
     const target = new Matrix(1, 3, [[0, 0, 0]]);
     const up = new Matrix(1, 3, [[0, 1, 0]]);
-    const cameraMatrix = CameraOp.lookAt(cameraPos, target, up);
-
-    let worldMatrix = TransformationMatrix4D.yRotation(
-      Converter.degToRad(camSettings.rotation)
+    let cameraMatrix = TransformationMatrix4D.yRotation(
+      camSettings.camRotation
     );
+    cameraMatrix = Transform.translate(cameraMatrix, 0, 0, radius * 1.5);
+    let cameraObjData = cameraMatrix.getPropsToObj().data;
 
-    worldMatrix = Transform.xRotate(
-      worldMatrix,
-      Converter.degToRad(camSettings.rotation)
-    );
+    const cameraPos = new Matrix(1, 3, [
+      [cameraObjData[3][0], cameraObjData[3][1], cameraObjData[3][2]],
+    ]);
 
-    worldMatrix = Transform.translate(worldMatrix, -0.03, -0.07, -0.01);
+    cameraMatrix = CameraOp.lookAt(cameraPos, target, up);
 
+    const viewMatrix = cameraMatrix.invert();
     // -----------------------
 
     this._gl.viewport(0, 0, this._gl.canvas.width, this._gl.canvas.height);
@@ -215,28 +204,41 @@ export default class WebGL2Handler {
       offset
     );
 
-    const viewMatrix = cameraMatrix.invert();
-    let matrix = MatrixOp.multiply(viewMatrix, perspectiveProjectionMatrix);
+    let matrix = TransformationMatrix4D.projection(
+      this._gl.canvas.clientWidth,
+      this._gl.canvas.clientHeight,
+      400
+    );
 
-    // let matrix = TransformationMatrix4D.projection(
-    //   this._gl.canvas.clientWidth,
-    //   this._gl.canvas.clientHeight,
-    //   400
-    // );
-    matrix = MatrixOp.multiply(worldMatrix, matrix);
-    console.log(worldMatrix);
-    console.log(matrix);
     matrix = Transform.translate(matrix, ...state.translation);
     matrix = Transform.xRotate(matrix, state.rotation[0]);
     matrix = Transform.yRotate(matrix, state.rotation[1]);
     matrix = Transform.zRotate(matrix, state.rotation[2]);
     matrix = Transform.scale(matrix, ...state.scale);
-    console.log(matrix);
-    const projectionMatrix = TransformationMatrix4D.projection(
+
+    let projectionMatrix = TransformationMatrix4D.projection(
       state.projectionType,
       state.obliqueTetha,
       state.obliquePhi
     );
+
+    if (state.projectionType === 'perspective') {
+      let perspectiveProjectionMatrix = CameraOp.perspective(
+        Converter.degToRad(camSettings.camFieldOfView),
+        aspect,
+        near,
+        far
+      );
+
+      projectionMatrix = MatrixOp.multiply(
+        viewMatrix,
+        perspectiveProjectionMatrix
+      );
+
+      projectionMatrix = Transform.scale(projectionMatrix, -1, 1, 1);
+    }
+
+    projectionMatrix = MatrixOp.multiply(worldMatrix, projectionMatrix);
 
     const normalMatrix = MatrixOp.copy(matrix).invert().transpose();
 
@@ -302,4 +304,6 @@ export default class WebGL2Handler {
       this._glComponent[buffer] = this._gl.createBuffer();
     }
   }
+
+  _draw(projectionMatrix, worldMatrix, viewMatrix) {}
 }

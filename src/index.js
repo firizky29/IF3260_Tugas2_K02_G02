@@ -17,6 +17,8 @@ const state = {
   fudgeFactor: 0,
   obliqueTetha: 0,
   obliquePhi: 0,
+  cameraRadius: 1.3,
+  cameraRotation: Converter.degToRad(0),
 };
 const renderSettings = {
   primitiveType: webgl2.getGl().TRIANGLES,
@@ -106,6 +108,20 @@ const eventHandler = {
       webgl2.clearBuffer().render(renderSettings, state);
     };
   },
+
+  updateCameraRadius() {
+    return (event, value) => {
+      state.cameraRadius = value;
+      webgl2.clearBuffer().render(renderSettings, state);
+    };
+  },
+
+  updateCameraRotation() {
+    return (event, value) => {
+      state.cameraRotation = Converter.degToRad(value);
+      webgl2.clearBuffer().render(renderSettings, state);
+    };
+  },
 };
 
 UIHandler.initSlider('#tx', {
@@ -165,6 +181,16 @@ UIHandler.initRadio('#projection', {
 UIHandler.initCheckbox('#shading', {
   initialValue: state.useLighting,
   handlerFn: eventHandler.updateShadingState(),
+});
+
+UIHandler.initSlider('#cameraRadius', {
+  initialValue: state.cameraRadius,
+  handlerFn: eventHandler.updateCameraRadius(),
+});
+
+UIHandler.initSlider('#cameraRotation', {
+  initialValue: state.cameraRotation,
+  handlerFn: eventHandler.updateCameraRotation(),
 });
 
 UIHandler;
