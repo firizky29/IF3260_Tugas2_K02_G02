@@ -215,7 +215,6 @@ export default class WebGL2Handler {
     matrix = Transform.yRotate(matrix, state.rotation[1]);
     matrix = Transform.zRotate(matrix, state.rotation[2]);
     matrix = Transform.scale(matrix, ...state.scale);
-    console.log(matrix);
     let projectionMatrix = TransformationMatrix4D.projection(
       state.projectionType,
       state.obliqueTetha,
@@ -306,5 +305,4 @@ export default class WebGL2Handler {
   }
 
   _draw(projectionMatrix, worldMatrix, viewMatrix) {}
-  
 }

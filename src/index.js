@@ -3,7 +3,7 @@ import Converter from './utils/Converter.js';
 import UIHandler from './utils/UIHandler.js';
 
 const webgl2 = new WebGL2Handler(document.querySelector('canvas')).init();
-const state = {
+let state = {
   model: { vertices: [], colors: [], normals: [] },
   translation: [0, 0, 0],
   rotation: [
@@ -46,7 +46,6 @@ const eventHandler = {
     return (event, value) => {
       state.scale[index] = value;
       webgl2.clearBuffer().render(renderSettings, state);
-      console.log(state);
     };
   },
 
@@ -123,6 +122,45 @@ const eventHandler = {
       webgl2.clearBuffer().render(renderSettings, state);
     };
   },
+
+  toDefaultButtonHandler() {
+    return (event) => {
+      const initialState = {
+        model: { vertices: [], colors: [], normals: [] },
+        translation: [0, 0, 0],
+        rotation: [
+          Converter.degToRad(0),
+          Converter.degToRad(0),
+          Converter.degToRad(0),
+        ],
+        scale: [1, 1, 1],
+        projectionType: 'orthographic',
+        useLighting: true,
+        fudgeFactor: 0,
+        obliqueTetha: 0,
+        obliquePhi: 0,
+        cameraRadius: 1.3,
+        cameraRotation: Converter.degToRad(0),
+      };
+      document.querySelector('#projection').value = initialState.projectionType;
+      document.querySelector('#shading').value = initialState.useLighting;
+      document.querySelector('#cameraRadius').value = initialState.cameraRadius;
+      document.querySelector('#cameraRotation').value =
+        initialState.cameraRotation;
+      document
+        .querySelectorAll('.translation')
+        .forEach((el, idx) => (el.value = initialState.translation[idx]));
+      document
+        .querySelectorAll('.rotation')
+        .forEach((el, idx) => (el.value = initialState.rotation[idx]));
+      document
+        .querySelectorAll('.scaling')
+        .forEach((el, idx) => (el.value = initialState.scale[idx]));
+
+      state = initialState;
+      webgl2.clearBuffer().render(renderSettings, state);
+    };
+  },
 };
 
 UIHandler.initSlider('#tx', {
@@ -194,6 +232,10 @@ UIHandler.initSlider('#cameraRotation', {
   handlerFn: eventHandler.updateCameraRotation(),
 });
 
+UIHandler.initButton('button#toDefault', {
+  handlerFn: eventHandler.toDefaultButtonHandler(),
+});
+
 webgl2
   .clearBuffer()
   .setVertices(state.model.vertices)
@@ -201,17 +243,17 @@ webgl2
   .setNormals(state.model.normals)
   .render(renderSettings, state);
 
-  const saveToJSON = () => {
-    let { vertices, colors, normals } = state.model;
-    
-    const json = JSON.stringify({vertices, colors, normals});
-    const data = new Blob([json], { type: "text/plain" });
-    const textFile = window.URL.createObjectURL(data);
-    const link = document.createElement("a");
-    link.setAttribute("download", "shapes.json");
-    link.href = textFile;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-  document.getElementById("save").addEventListener("click", saveToJSON);
+const saveToJSON = () => {
+  let { vertices, colors, normals } = state.model;
+
+  const json = JSON.stringify({ vertices, colors, normals });
+  const data = new Blob([json], { type: 'text/plain' });
+  const textFile = window.URL.createObjectURL(data);
+  const link = document.createElement('a');
+  link.setAttribute('download', 'shapes.json');
+  link.href = textFile;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+document.getElementById('save').addEventListener('click', saveToJSON);

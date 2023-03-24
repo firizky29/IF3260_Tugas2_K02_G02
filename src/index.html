@@ -43,6 +43,7 @@
             <div class="input-row">
               <label for="tx">x:</label>
               <input
+                class="translation"
                 type="range"
                 min="-1"
                 max="1"
@@ -52,6 +53,7 @@
               />
               <label for="ty" style="margin-left: 12px">y:</label>
               <input
+                class="translation"
                 type="range"
                 min="-1"
                 max="1"
@@ -61,6 +63,7 @@
               />
               <label for="tz" style="margin-left: 12px">z:</label>
               <input
+                class="translation"
                 type="range"
                 min="-1"
                 max="1"
@@ -72,20 +75,62 @@
             <p><b>Rotation</b></p>
             <div class="input-row">
               <label for="rx">x:</label>
-              <input type="range" min="0" max="720" name="rx" id="rx" />
+              <input
+                type="range"
+                class="rotation"
+                min="0"
+                max="720"
+                name="rx"
+                id="rx"
+              />
               <label for="ry" style="margin-left: 12px">y:</label>
-              <input type="range" min="0" max="720" name="ry" id="ry" />
+              <input
+                type="range"
+                class="rotation"
+                min="0"
+                max="720"
+                name="ry"
+                id="ry"
+              />
               <label for="rz" style="margin-left: 12px">z:</label>
-              <input type="range" min="0" max="720" name="rz" id="rz" />
+              <input
+                type="range"
+                class="rotation"
+                min="0"
+                max="720"
+                name="rz"
+                id="rz"
+              />
             </div>
             <p><b>Scale</b></p>
             <div class="input-row">
               <label for="sx">x:</label>
-              <input type="range" name="sx" id="sx" step="0.01" max="2" />
+              <input
+                type="range"
+                class="scaling"
+                name="sx"
+                id="sx"
+                step="0.01"
+                max="2"
+              />
               <label for="sy" style="margin-left: 12px">y:</label>
-              <input type="range" name="sy" id="sy" step="0.01" max="2" />
+              <input
+                type="range"
+                class="scaling"
+                name="sy"
+                id="sy"
+                step="0.01"
+                max="2"
+              />
               <label for="sz" style="margin-left: 12px">z:</label>
-              <input type="range" name="sz" id="sz" step="0.01" max="2" />
+              <input
+                type="range"
+                class="scaling"
+                name="sz"
+                id="sz"
+                step="0.01"
+                max="2"
+              />
             </div>
             <p><b>Lighting and Shading</b></p>
             <div class="input-row">
@@ -114,6 +159,9 @@
                 min="-360"
                 max="360"
               />
+            </div>
+            <div class="input-row">
+              <button id="toDefault">Set to default</button>
             </div>
           </div>
         </div>
