@@ -256,6 +256,8 @@ export default class WebGL2Handler {
     this._gl.uniform1i(useLighting, state.useLighting);
     this._gl.uniform1f(fudgeFactor, state.fudgeFactor);
 
+    console.log(drawCounter)
+
     this._gl.drawArrays(primitiveType, offset, drawCounter);
   }
 
