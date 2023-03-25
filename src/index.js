@@ -263,3 +263,9 @@ const saveToJSON = () => {
   document.body.removeChild(link);
 };
 document.getElementById('save').addEventListener('click', saveToJSON);
+
+const startAnimation = () => {
+  webgl2.clearBuffer().renderAnimation(renderSettings, state);
+}
+document.getElementById('animate').addEventListener('click', startAnimation);
+
