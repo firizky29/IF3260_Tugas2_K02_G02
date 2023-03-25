@@ -215,6 +215,9 @@ export default class WebGL2Handler {
     matrix = Transform.xRotate(matrix, state.rotation[0]);
     matrix = Transform.yRotate(matrix, state.rotation[1]);
     matrix = Transform.zRotate(matrix, state.rotation[2]);
+    matrix = Transform.xRotate(matrix, state.animation_rotation[0]);
+    matrix = Transform.yRotate(matrix, state.animation_rotation[1]);
+    matrix = Transform.zRotate(matrix, state.animation_rotation[2]);
     matrix = Transform.scale(matrix, ...state.scale);
     let projectionMatrix = TransformationMatrix4D.projection(
       state.projectionType,
@@ -262,12 +265,17 @@ export default class WebGL2Handler {
 
     this._gl.drawArrays(primitiveType, offset, drawCounter);
 
-    this.renderAnimation(settings, state);
+    if (state.animation == true){
+      this.renderAnimation(settings, state);
+    }
   }
 
   renderAnimation(settings, state) {
     window.requestAnimationFrame(() => {
-      state.rotation[1] += 0.01;
+      state.animation_rotation[0] += 0.01;
+      state.animation_rotation[1] += 0.02;
+      state.animation_rotation[2] += 0.03;
+      console.log(state.animation_rotation);
       this.clearBuffer().render(settings, state);
     });
     // const positionAttributeLocation = this._gl.getAttribLocation(
@@ -456,7 +464,6 @@ export default class WebGL2Handler {
     // }
 
   }
-
 
   _createShader(type, source) {
     const shader = this._gl.createShader(type);
