@@ -249,7 +249,7 @@ webgl2
   .setVertices(state.model.vertices)
   .setColors(state.model.colors)
   .setNormals(state.model.normals)
-  .renderAnimation(renderSettings, state);
+  .render(renderSettings, state);
 
 const saveToJSON = () => {
   let { vertices, colors, normals } = state.model;

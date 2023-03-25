@@ -262,13 +262,14 @@ export default class WebGL2Handler {
 
     this._gl.drawArrays(primitiveType, offset, drawCounter);
 
-    this.renderAnimation(settings, state);
+    
   }
 
   renderAnimation(settings, state) {
     window.requestAnimationFrame(() => {
       state.rotation[1] += 0.01;
       this.clearBuffer().render(settings, state);
+      this.renderAnimation(settings, state);
     });
     // const positionAttributeLocation = this._gl.getAttribLocation(
     //   this._glComponent.program,
