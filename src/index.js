@@ -257,8 +257,21 @@ const saveToJSON = () => {
   document.body.removeChild(link);
 };
 document.getElementById('save').addEventListener('click', saveToJSON);
-document.getElementById('animate').addEventListener('click', startAnimation);
 
 const startAnimation = () => {
-    webgl2.clearBuffer().renderAnimation(renderSettings, state);
+  webgl2.clearBuffer().renderAnimation(renderSettings, state);
 }
+document.getElementById('animate').addEventListener('click', startAnimation);
+
+
+//Help button
+var modal = document.getElementById('modal')
+var btn = document.getElementById('help-btn')
+var span = document.getElementsByClassName('close')[0]
+btn.onclick = function () {
+  modal.style.display = 'block'
+}
+span.onclick = function () {
+  modal.style.display = 'none'
+}
+

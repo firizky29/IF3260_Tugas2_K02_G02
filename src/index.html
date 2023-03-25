@@ -10,6 +10,60 @@
   </head>
 
   <body>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="header">Petunjuk Penggunaan</h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <h3>Membuka File Model Hollow Object</h3>
+          <ul>
+            <li>
+              Canvas kosong ketika pertama kali web dibuka
+            </li>
+            <li>
+              Untuk membuka file hollow object, tekan tombol <b>Open Model File</b> di menu. Pilih file yang ada di dalam <b>/test</b>.
+            </li>
+          </ul>
+          <h3>Mengubah Jenis Proyeksi</h3>
+          <ul>
+            <li>
+              Pilih jenis proyeksi dari <b>dropdown menu</b> di opsi yang di bagian kanan aplikasi.
+            </li>
+          </ul>
+          <h3>Melakukan Rotasi, Translasi dan Scaling dari Objek</h3>
+          <ul>
+            <li>
+              Atur rotasi, translasi, dan scaling dari sumbu x, y, dan z objek dengan <b>slider</b> yang ada di opsi.
+            </li>
+          </ul>
+          <ul>
+            <li>
+              Nyalakan/matikan shading dengan memilih opsinya pada <b>checkbox</b> shading di bagian kanan aplikasi.
+            </li>
+          </ul>
+          <h3>Manipulasi Kamera</h3>
+          <ul>
+            <li>
+              Manipulasi kamera dengan menggerakkan <b>slider</b> untuk rotasi kamera dan radius kamera.
+            </li>
+          </ul>
+          <h3>Me-reset ke Default View</h3>
+          <ul>
+            <li>
+              Tekan tombol <b>Set to Default</b>.
+            </li>
+          </ul>
+          <h3>Memulai Animasi</h3>
+          <ul>
+            <li>
+              Tekan tombol <b>Start Animation</b>.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="container">
       <div class="object-container">
         <div class="canvas__display">
@@ -18,6 +72,7 @@
         <div class="canvas__controller">
           <b>Control Panel</b>
           <div class="control-panel">
+            <div id="help-btn" style="margin-top: -20px;">Help</div>
             <div class="input-row">
               <label for="model">Model:</label>
               <!-- create a load button -->
