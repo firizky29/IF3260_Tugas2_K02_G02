@@ -187,7 +187,7 @@ const eventHandler = {
         el.value = initialState.scale[idx];
         el.nextElementSibling.value = initialState.scale[idx];
       });
-
+      document.querySelector('#shading').checked = initialState.useLighting;
       state = { ...initialState, model: state.model };
       webgl2.clearBuffer().render(renderSettings, state);
     };
