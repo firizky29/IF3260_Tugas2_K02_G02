@@ -11,6 +11,11 @@ let state = {
     Converter.degToRad(0),
     Converter.degToRad(0),
   ],
+  animation_rotation: [
+    Converter.degToRad(0),
+    Converter.degToRad(0),
+    Converter.degToRad(0),
+  ],
   scale: [1, 1, 1],
   projectionType: 'orthographic',
   useLighting: true,
@@ -19,6 +24,7 @@ let state = {
   obliquePhi: 0,
   cameraRadius: -1.3,
   cameraRotation: Converter.degToRad(0),
+  animation: false,
 };
 const renderSettings = {
   primitiveType: webgl2.getGl().TRIANGLES,
@@ -28,6 +34,7 @@ const renderSettings = {
 const eventHandler = {
   updatePosition(index) {
     return (event, value) => {
+      state.animation = false;
       state.translation[index] = value;
       webgl2.clearBuffer().render(renderSettings, state);
     };
@@ -35,6 +42,7 @@ const eventHandler = {
 
   updateRotation(index) {
     return (event, value) => {
+      state.animation = false;
       const angleInDegrees = value;
       const angleInRadians = Converter.degToRad(angleInDegrees);
       state.rotation[index] = angleInRadians;
@@ -44,6 +52,7 @@ const eventHandler = {
 
   updateScale(index) {
     return (event, value) => {
+      state.animation = false;
       state.scale[index] = value;
       webgl2.clearBuffer().render(renderSettings, state);
     };
@@ -135,6 +144,11 @@ const eventHandler = {
       const initialState = {
         translation: [0, 0, 0],
         rotation: [
+          Converter.degToRad(0),
+          Converter.degToRad(0),
+          Converter.degToRad(0),
+        ],
+        animation_rotation: [
           Converter.degToRad(0),
           Converter.degToRad(0),
           Converter.degToRad(0),
@@ -265,6 +279,15 @@ const saveToJSON = () => {
 document.getElementById('save').addEventListener('click', saveToJSON);
 
 const startAnimation = () => {
+  state.animation = true;
   webgl2.clearBuffer().renderAnimation(renderSettings, state);
 };
 document.getElementById('animate').addEventListener('click', startAnimation);
+
+const stopAnimation = () => {
+  state.animation = false;
+  webgl2.clearBuffer().renderAnimation(renderSettings, state);
+};
+document
+  .getElementById('stop_animate')
+  .addEventListener('click', stopAnimation);
