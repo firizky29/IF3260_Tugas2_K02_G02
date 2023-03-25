@@ -167,18 +167,32 @@ const eventHandler = {
       };
       document.querySelector('#projection').value = initialState.projectionType;
       document.querySelector('#shading').value = initialState.useLighting;
-      document.querySelector('#cameraRadius').value = initialState.cameraRadius;
-      document.querySelector('#cameraRotation').value =
-        initialState.cameraRotation;
+      const cameraRadius = document.querySelector('#cameraRadius')
+      cameraRadius.value = initialState.cameraRadius;
+      cameraRadius.nextElementSibling.value = initialState.cameraRadius;
+
+      const cameraRotation = document.querySelector('#cameraRotation')
+      cameraRotation.value = initialState.cameraRotation;
+      cameraRotation.nextElementSibling.value = initialState.cameraRotation;
+
       document
         .querySelectorAll('.translation')
-        .forEach((el, idx) => (el.value = initialState.translation[idx]));
+        .forEach((el, idx) => {
+          el.value = initialState.translation[idx];
+          el.nextElementSibling.value = initialState.translation[idx];
+        });
       document
         .querySelectorAll('.rotation')
-        .forEach((el, idx) => (el.value = initialState.rotation[idx]));
+        .forEach((el, idx) => {
+          el.value = initialState.rotation[idx]
+          el.nextElementSibling.value = initialState.rotation[idx]
+        });
       document
         .querySelectorAll('.scaling')
-        .forEach((el, idx) => (el.value = initialState.scale[idx]));
+        .forEach((el, idx) => {
+          el.value = initialState.scale[idx]
+          el.nextElementSibling.value = initialState.scale[idx]
+        });
 
       state = { ...initialState, model: state.model}
       webgl2.clearBuffer().render(renderSettings, state);
