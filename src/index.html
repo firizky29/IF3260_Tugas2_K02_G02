@@ -45,17 +45,20 @@
           <p><b>Translate</b></p>
           <div class="input-row">
             <label for="tx">x:</label>
-            <input class="translation" type="range" min="-1" max="1" step="0.01" name="tx" id="tx" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="translation" type="range" min="-1" max="1" step="0.01" name="tx" id="tx"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>0</output>
           </div>
           <div class="input-row">
             <label for="ty">y:</label>
-            <input class="translation" type="range" min="-1" max="1" step="0.01" name="ty" id="ty" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="translation" type="range" min="-1" max="1" step="0.01" name="ty" id="ty"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>0</output>
           </div>
           <div class="input-row">
             <label for="tz">z:</label>
-            <input class="translation" type="range" min="-1" max="1" step="0.01" name="tz" id="tz" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="translation" type="range" min="-1" max="1" step="0.01" name="tz" id="tz"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>0</output>
           </div>
 
@@ -63,34 +66,40 @@
           <p><b>Rotation</b></p>
           <div class="input-row">
             <label for="rx">x:</label>
-            <input class="rotation" type="range" min="0" max="720" step="1" name="rx" id="rx" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="rotation" type="range" min="0" max="720" step="1" name="rx" id="rx"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>0</output>
           </div>
           <div class="input-row">
             <label for="ry">y:</label>
-            <input class="rotation" type="range" min="0" max="720" step="1" name="ry" id="ry" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="rotation" type="range" min="0" max="720" step="1" name="ry" id="ry"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>0</output>
           </div>
           <div class="input-row">
             <label for="rz">z:</label>
-            <input class="rotation" type="range" min="0" max="720" step="1" name="rz" id="rz" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="rotation" type="range" min="0" max="720" step="1" name="rz" id="rz"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>0</output>
           </div>
 
           <p><b>Scale</b></p>
           <div class="input-row">
             <label for="sx">x:</label>
-            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sx" id="sx" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sx" id="sx"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>1</output>
           </div>
           <div class="input-row">
             <label for="sy">y:</label>
-            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sy" id="sy" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sy" id="sy"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>1</output>
           </div>
           <div class="input-row">
             <label for="sz">z:</label>
-            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sz" id="sz" oninput="this.nextElementSibling.value = this.value"/>
+            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sz" id="sz"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>1</output>
           </div>
 
@@ -102,10 +111,12 @@
           <p><b>Camera</b></p>
           <div class="input-row">
             <label for="cameraRadius">Radius:</label>
-            <input type="range" name="cameraRadius" id="cameraRadius" step="0.1" min="-2" max="2" oninput="this.nextElementSibling.value = this.value" />
+            <input type="range" name="cameraRadius" id="cameraRadius" step="0.1" min="-2" max="2"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>1.3</output>
             <label for="cameraRotation" style="margin-left: 12px">Rotation:</label>
-            <input type="range" name="cameraRotation" id="cameraRotation" step="1" min="-360" max="360" oninput="this.nextElementSibling.value = this.value" />
+            <input type="range" name="cameraRotation" id="cameraRotation" step="1" min="-360" max="360"
+              oninput="this.nextElementSibling.value = this.value" />
             <output>0</output>
           </div>
           <div class="input-row">
@@ -113,7 +124,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- modal -->
       <div class="modal fade" id="modal-help" tabindex="-1" role="dialog" aria-labelledby="modal-help"
         aria-hidden="true">
@@ -121,37 +132,57 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="modal-help-label">Help Menu</h5>
-              <button  data-bs-dismiss="modal" aria-label="Close">
+              <button data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <!-- buat konten bantuan untuk open model file (json), mengubah projection view, translasi, rotasi, scaling -->
-              <p class="fw-bold">Open Model File</p>
-              <p>Click the button "Open Model File" and choose the file with .json extension</p>
-              <hr>
-              <p class="fw-bold">Projection View</p>
-              <p>Choose the projection view you want to use</p>
-              <hr>
-              <p class="fw-bold">Translate</p>
-              <!-- give explanation on how to translate it, dont just give explanation of what it is about -->
-              <p>Translate the object in the x, y, and z axis by moving the slider in translation section to the right or left</p>
-              <hr>
-              <p class="fw-bold">Rotation<br></p>
-              <p>Rotate the object in the x, y, and z axis by moving the slider in rotation section to the right or left</p>
-              <hr>
-              <p class="fw-bold">Scale</p>
-              <p>Rotate the object in the x, y, and z axis by moving the slider in scaling section to the right or left</p>
-              <hr>
-              <p class="fw-bold">Lighting and Shading</p>
-              <p>Check the box to use shading</p>
-              <hr>
-              <p class="fw-bold">Camera</p>
-              <p>Change the radius and rotation of the camera by moving the slider in camera section to the right or left</p>
-              <hr>
-              <p class="fw-bold">Set to default</p>
-              <p>Set the object to the default position by clicking the button "Set to default"</p>
-              <hr>
+              <h3>Membuka File Model Hollow Object</h3>
+              <ul>
+                <li>
+                  Canvas kosong ketika pertama kali web dibuka
+                </li>
+                <li>
+                  Untuk membuka file hollow object, tekan tombol <b>Open Model File</b> di menu. Pilih file yang ada di
+                  dalam <b>/test</b>.
+                </li>
+              </ul>
+              <h3>Mengubah Jenis Proyeksi</h3>
+              <ul>
+                <li>
+                  Pilih jenis proyeksi dari <b>dropdown menu</b> di opsi yang di bagian kanan aplikasi.
+                </li>
+              </ul>
+              <h3>Melakukan Rotasi, Translasi dan Scaling dari Objek</h3>
+              <ul>
+                <li>
+                  Atur rotasi, translasi, dan scaling dari sumbu x, y, dan z objek dengan <b>slider</b> yang ada di
+                  opsi.
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  Nyalakan/matikan shading dengan memilih opsinya pada <b>checkbox</b> shading di bagian kanan aplikasi.
+                </li>
+              </ul>
+              <h3>Manipulasi Kamera</h3>
+              <ul>
+                <li>
+                  Manipulasi kamera dengan menggerakkan <b>slider</b> untuk rotasi kamera dan radius kamera.
+                </li>
+              </ul>
+              <h3>Me-reset ke Default View</h3>
+              <ul>
+                <li>
+                  Tekan tombol <b>Set to Default</b>.
+                </li>
+              </ul>
+              <h3>Memulai Animasi</h3>
+              <ul>
+                <li>
+                  Tekan tombol <b>Start Animation</b>.
+                </li>
+              </ul>
             </div>
             <div class="modal-footer">
               <button data-bs-dismiss="modal">Close</button>
