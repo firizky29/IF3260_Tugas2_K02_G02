@@ -22,7 +22,7 @@ let state = {
   fudgeFactor: 0,
   obliqueTetha: 0,
   obliquePhi: 0,
-  cameraRadius: 1.3,
+  cameraRadius: -1.3,
   cameraRotation: Converter.degToRad(0),
   animation: false,
 };
@@ -70,22 +70,21 @@ const eventHandler = {
           return;
         }
 
-        
         var reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
-        
+
         reader.onload = (readerEvent) => {
           var content = readerEvent.target.result;
           content = JSON.parse(content);
           // set all to default
-          state.model = content    
+          state.model = content;
           renderSettings.drawCounter = content.vertices.length;
-          const toDefault = document.querySelector('button#toDefault')
+          const toDefault = document.querySelector('button#toDefault');
           toDefault.click();
 
           webgl2.destroy();
           webgl2 = new WebGL2Handler(document.querySelector('canvas')).init();
-          
+
           webgl2
             .clearBuffer()
             .setVertices(state.model.vertices)
@@ -161,7 +160,7 @@ const eventHandler = {
         fudgeFactor: 0,
         obliqueTetha: 0,
         obliquePhi: 0,
-        cameraRadius: 1.3,
+        cameraRadius: -1.3,
         cameraRotation: Converter.degToRad(0),
         animation: false,
       };
@@ -194,7 +193,7 @@ const eventHandler = {
           el.nextElementSibling.value = initialState.scale[idx]
         });
 
-      state = { ...initialState, model: state.model}
+      state = { ...initialState, model: state.model };
       webgl2.clearBuffer().render(renderSettings, state);
     };
   },
@@ -273,8 +272,6 @@ UIHandler.initButton('button#toDefault', {
   handlerFn: eventHandler.toDefaultButtonHandler(),
 });
 
-
-
 webgl2
   .clearBuffer()
   .setVertices(state.model.vertices)
@@ -300,12 +297,13 @@ document.getElementById('save').addEventListener('click', saveToJSON);
 const startAnimation = () => {
   state.animation = true;
   webgl2.clearBuffer().renderAnimation(renderSettings, state);
-}
+};
 document.getElementById('animate').addEventListener('click', startAnimation);
 
 const stopAnimation = () => {
   state.animation = false;
   webgl2.clearBuffer().renderAnimation(renderSettings, state);
-}
-document.getElementById('stop_animate').addEventListener('click', stopAnimation);
-
+};
+document
+  .getElementById('stop_animate')
+  .addEventListener('click', stopAnimation);
