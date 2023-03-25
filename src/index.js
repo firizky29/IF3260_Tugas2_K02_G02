@@ -167,26 +167,25 @@ const eventHandler = {
       document.querySelector('#projection').value = initialState.projectionType;
       document.querySelector('#projection').dispatchEvent(new Event('input'));
       document.querySelector('#shading').value = initialState.useLighting;
-      document.querySelector('#shading').dispatchEvent(new Event('input'));
-      document.querySelector('#cameraRadius').value = initialState.cameraRadius;
-      document.querySelector('#cameraRadius').dispatchEvent(new Event('input'));
-      document.querySelector('#cameraRotation').value =
-        initialState.cameraRotation;
-      document
-        .querySelector('#cameraRotation')
-        .dispatchEvent(new Event('input'));
+      const cameraRadius = document.querySelector('#cameraRadius');
+      cameraRadius.value = initialState.cameraRadius;
+      cameraRadius.nextElementSibling.value = initialState.cameraRadius;
+
+      const cameraRotation = document.querySelector('#cameraRotation');
+      cameraRotation.value = initialState.cameraRotation;
+      cameraRotation.nextElementSibling.value = initialState.cameraRotation;
 
       document.querySelectorAll('.translation').forEach((el, idx) => {
         el.value = initialState.translation[idx];
-        el.dispatchEvent(new Event('input'));
+        el.nextElementSibling.value = initialState.translation[idx];
       });
       document.querySelectorAll('.rotation').forEach((el, idx) => {
         el.value = initialState.rotation[idx];
-        el.dispatchEvent(new Event('input'));
+        el.nextElementSibling.value = initialState.rotation[idx];
       });
       document.querySelectorAll('.scaling').forEach((el, idx) => {
         el.value = initialState.scale[idx];
-        el.dispatchEvent(new Event('input'));
+        el.nextElementSibling.value = initialState.scale[idx];
       });
 
       state = { ...initialState, model: state.model };
