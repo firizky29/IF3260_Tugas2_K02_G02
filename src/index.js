@@ -2,7 +2,7 @@ import WebGL2Handler from './utils/classes/WebGL2Handler.js';
 import Converter from './utils/Converter.js';
 import UIHandler from './utils/UIHandler.js';
 
-const webgl2 = new WebGL2Handler(document.querySelector('canvas')).init();
+let webgl2 = new WebGL2Handler(document.querySelector('canvas')).init();
 let state = {
   model: { vertices: [], colors: [], normals: [] },
   translation: [0, 0, 0],
@@ -67,14 +67,16 @@ const eventHandler = {
         
         reader.onload = (readerEvent) => {
           var content = readerEvent.target.result;
-          const toDefault = document.querySelector('button#toDefault')
-          const emptyModel = { vertices: [], colors: [], normals: []}
-          state.model = emptyModel;
-          toDefault.click();
-          state.model = JSON.parse(content);
-          console.log(state.model)
+          content = JSON.parse(content);
           // set all to default
-          renderSettings.drawCounter = state.model.vertices.length;
+          state.model = content     
+          renderSettings.drawCounter = content.vertices.length;
+          const toDefault = document.querySelector('button#toDefault')
+          toDefault.click();
+
+          webgl2 = new WebGL2Handler(document.querySelector('canvas')).init()
+            
+            
           webgl2
             .clearBuffer()
             .setVertices(state.model.vertices)
@@ -247,7 +249,7 @@ webgl2
   .setVertices(state.model.vertices)
   .setColors(state.model.colors)
   .setNormals(state.model.normals)
-  .render(renderSettings, state);
+  .renderAnimation(renderSettings, state);
 
 const saveToJSON = () => {
   let { vertices, colors, normals } = state.model;
