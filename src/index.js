@@ -11,6 +11,11 @@ let state = {
     Converter.degToRad(0),
     Converter.degToRad(0),
   ],
+  animation_rotation: [
+    Converter.degToRad(0),
+    Converter.degToRad(0),
+    Converter.degToRad(0),
+  ],
   scale: [1, 1, 1],
   projectionType: 'orthographic',
   useLighting: true,
@@ -19,6 +24,7 @@ let state = {
   obliquePhi: 0,
   cameraRadius: 1.3,
   cameraRotation: Converter.degToRad(0),
+  animation: false,
 };
 const renderSettings = {
   primitiveType: webgl2.getGl().TRIANGLES,
@@ -28,6 +34,7 @@ const renderSettings = {
 const eventHandler = {
   updatePosition(index) {
     return (event, value) => {
+      state.animation = false;
       state.translation[index] = value;
       webgl2.clearBuffer().render(renderSettings, state);
     };
@@ -35,6 +42,7 @@ const eventHandler = {
 
   updateRotation(index) {
     return (event, value) => {
+      state.animation = false;
       const angleInDegrees = value;
       const angleInRadians = Converter.degToRad(angleInDegrees);
       state.rotation[index] = angleInRadians;
@@ -44,6 +52,7 @@ const eventHandler = {
 
   updateScale(index) {
     return (event, value) => {
+      state.animation = false;
       state.scale[index] = value;
       webgl2.clearBuffer().render(renderSettings, state);
     };
@@ -69,14 +78,14 @@ const eventHandler = {
           var content = readerEvent.target.result;
           content = JSON.parse(content);
           // set all to default
-          state.model = content     
+          state.model = content    
           renderSettings.drawCounter = content.vertices.length;
           const toDefault = document.querySelector('button#toDefault')
           toDefault.click();
 
-          webgl2 = new WebGL2Handler(document.querySelector('canvas')).init()
-            
-            
+          webgl2.destroy();
+          webgl2 = new WebGL2Handler(document.querySelector('canvas')).init();
+          
           webgl2
             .clearBuffer()
             .setVertices(state.model.vertices)
@@ -141,6 +150,11 @@ const eventHandler = {
           Converter.degToRad(0),
           Converter.degToRad(0),
         ],
+        animation_rotation: [
+          Converter.degToRad(0),
+          Converter.degToRad(0),
+          Converter.degToRad(0),
+        ],
         scale: [1, 1, 1],
         projectionType: 'orthographic',
         useLighting: true,
@@ -149,6 +163,7 @@ const eventHandler = {
         obliquePhi: 0,
         cameraRadius: 1.3,
         cameraRotation: Converter.degToRad(0),
+        animation: false,
       };
       document.querySelector('#projection').value = initialState.projectionType;
       document.querySelector('#shading').value = initialState.useLighting;
@@ -244,6 +259,8 @@ UIHandler.initButton('button#toDefault', {
   handlerFn: eventHandler.toDefaultButtonHandler(),
 });
 
+
+
 webgl2
   .clearBuffer()
   .setVertices(state.model.vertices)
@@ -267,7 +284,14 @@ const saveToJSON = () => {
 document.getElementById('save').addEventListener('click', saveToJSON);
 
 const startAnimation = () => {
+  state.animation = true;
   webgl2.clearBuffer().renderAnimation(renderSettings, state);
 }
 document.getElementById('animate').addEventListener('click', startAnimation);
+
+const stopAnimation = () => {
+  state.animation = false;
+  webgl2.clearBuffer().renderAnimation(renderSettings, state);
+}
+document.getElementById('stop_animate').addEventListener('click', stopAnimation);
 
