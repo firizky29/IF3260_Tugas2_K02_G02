@@ -165,19 +165,29 @@ const eventHandler = {
         animation: false,
       };
       document.querySelector('#projection').value = initialState.projectionType;
+      document.querySelector('#projection').dispatchEvent(new Event('input'));
       document.querySelector('#shading').value = initialState.useLighting;
+      document.querySelector('#shading').dispatchEvent(new Event('input'));
       document.querySelector('#cameraRadius').value = initialState.cameraRadius;
+      document.querySelector('#cameraRadius').dispatchEvent(new Event('input'));
       document.querySelector('#cameraRotation').value =
         initialState.cameraRotation;
       document
-        .querySelectorAll('.translation')
-        .forEach((el, idx) => (el.value = initialState.translation[idx]));
-      document
-        .querySelectorAll('.rotation')
-        .forEach((el, idx) => (el.value = initialState.rotation[idx]));
-      document
-        .querySelectorAll('.scaling')
-        .forEach((el, idx) => (el.value = initialState.scale[idx]));
+        .querySelector('#cameraRotation')
+        .dispatchEvent(new Event('input'));
+
+      document.querySelectorAll('.translation').forEach((el, idx) => {
+        el.value = initialState.translation[idx];
+        el.dispatchEvent(new Event('input'));
+      });
+      document.querySelectorAll('.rotation').forEach((el, idx) => {
+        el.value = initialState.rotation[idx];
+        el.dispatchEvent(new Event('input'));
+      });
+      document.querySelectorAll('.scaling').forEach((el, idx) => {
+        el.value = initialState.scale[idx];
+        el.dispatchEvent(new Event('input'));
+      });
 
       state = { ...initialState, model: state.model };
       webgl2.clearBuffer().render(renderSettings, state);
@@ -290,6 +300,7 @@ const stopAnimation = () => {
   state.animation = false;
   webgl2.clearBuffer().renderAnimation(renderSettings, state);
 };
+
 document
   .getElementById('stop_animate')
   .addEventListener('click', stopAnimation);
