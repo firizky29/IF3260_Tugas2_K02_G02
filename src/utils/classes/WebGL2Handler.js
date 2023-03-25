@@ -10,6 +10,13 @@ export default class WebGL2Handler {
     this._canvas = canvas;
     this._gl = this._canvas.getContext('webgl2');
     this._glComponent = {};
+    this._buffers = [
+      'vertexBuffer',
+      'normalBuffer',
+      'colorBuffer',
+      'camPositionBuffer',
+      'camIndicesBuffer',
+    ];
   }
 
   init() {
@@ -23,17 +30,14 @@ export default class WebGL2Handler {
         source: CONFIG.FRAGMENT_SHADER,
       },
     ];
-    const buffers = [
-      'vertexBuffer',
-      'normalBuffer',
-      'colorBuffer',
-      'camPositionBuffer',
-      'camIndicesBuffer',
-    ];
 
+    
+
+    
     this._glComponent.program = this._createProgram(shadersConfig);
-
-    this._createBuffers(buffers);
+    
+    this._createBuffers();
+    
 
     this._gl.enable(this._gl.DEPTH_TEST); // enabled by default, but let's be SURE.
 
@@ -79,6 +83,7 @@ export default class WebGL2Handler {
   }
 
   clearBuffer() {
+    
     this._gl.clearColor(0, 0, 0, 1.0);
     this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
     return this;
@@ -265,9 +270,7 @@ export default class WebGL2Handler {
 
     this._gl.drawArrays(primitiveType, offset, drawCounter);
 
-    if (state.animation == true){
-      this.renderAnimation(settings, state);
-    }
+    
   }
 
   renderAnimation(settings, state) {
@@ -275,8 +278,10 @@ export default class WebGL2Handler {
       state.animation_rotation[0] += 0.01;
       state.animation_rotation[1] += 0.02;
       state.animation_rotation[2] += 0.03;
-      console.log(state.animation_rotation);
       this.clearBuffer().render(settings, state);
+      if (state.animation == true){
+        this.renderAnimation(settings, state);
+      }
     });
     // const positionAttributeLocation = this._gl.getAttribLocation(
     //   this._glComponent.program,
@@ -504,11 +509,18 @@ export default class WebGL2Handler {
     return program;
   }
 
-  _createBuffers(buffers) {
-    for (let buffer of buffers) {
+  _createBuffers() {
+    for (let buffer of this._buffers) {
       this._glComponent[buffer] = this._gl.createBuffer();
     }
   }
 
   _draw(projectionMatrix, worldMatrix, viewMatrix) { }
+
+  destroy(){
+    for(let buffer of this._buffers){
+      this._gl.deleteBuffer(this._glComponent[buffer]);
+    }
+    this._gl.deleteProgram(this._glComponent.program);
+  }
 }

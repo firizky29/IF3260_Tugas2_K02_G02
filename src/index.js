@@ -82,6 +82,7 @@ const eventHandler = {
           const toDefault = document.querySelector('button#toDefault');
           toDefault.click();
 
+          webgl2.destroy();
           webgl2 = new WebGL2Handler(document.querySelector('canvas')).init();
 
           webgl2
@@ -161,6 +162,7 @@ const eventHandler = {
         obliquePhi: 0,
         cameraRadius: -1.3,
         cameraRotation: Converter.degToRad(0),
+        animation: false,
       };
       document.querySelector('#projection').value = initialState.projectionType;
       document.querySelector('#shading').value = initialState.useLighting;
@@ -261,7 +263,7 @@ webgl2
   .setVertices(state.model.vertices)
   .setColors(state.model.colors)
   .setNormals(state.model.normals)
-  .renderAnimation(renderSettings, state);
+  .render(renderSettings, state);
 
 const saveToJSON = () => {
   let { vertices, colors, normals } = state.model;
