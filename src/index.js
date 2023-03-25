@@ -61,12 +61,19 @@ const eventHandler = {
           return;
         }
 
+        
         var reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
-
+        
         reader.onload = (readerEvent) => {
           var content = readerEvent.target.result;
+          const toDefault = document.querySelector('button#toDefault')
+          const emptyModel = { vertices: [], colors: [], normals: []}
+          state.model = emptyModel;
+          toDefault.click();
           state.model = JSON.parse(content);
+          console.log(state.model)
+          // set all to default
           renderSettings.drawCounter = state.model.vertices.length;
           webgl2
             .clearBuffer()
@@ -126,7 +133,6 @@ const eventHandler = {
   toDefaultButtonHandler() {
     return (event) => {
       const initialState = {
-        model: { vertices: [], colors: [], normals: [] },
         translation: [0, 0, 0],
         rotation: [
           Converter.degToRad(0),
@@ -157,7 +163,7 @@ const eventHandler = {
         .querySelectorAll('.scaling')
         .forEach((el, idx) => (el.value = initialState.scale[idx]));
 
-      state = initialState;
+      state = { ...initialState, model: state.model}
       webgl2.clearBuffer().render(renderSettings, state);
     };
   },

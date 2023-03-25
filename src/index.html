@@ -1,171 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/style.css" />
-    <script src="index.js" type="module" defer></script>
-    <title>3D Hollow Object</title>
-  </head>
 
-  <body>
-    <div class="container">
-      <div class="object-container">
-        <div class="canvas__display">
-          <canvas id="canvas" width="800" height="800"> </canvas>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+
+  <script src="index.js" type="module" defer></script>
+  <title>3D Hollow Object</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="object-container">
+      <div class="canvas__display">
+        <canvas id="canvas" width="800" height="800"> </canvas>
+      </div>
+      <div class="canvas__controller">
+        <b>Control Panel</b>
+        <div class="control-panel">
+          <div class="input-row">
+            <button id="help" data-bs-toggle="modal" data-bs-target="#modal-help">
+              Help
+            </button>
+          </div>
+          <p><b>Model</b></p>
+          <div class="input-row">
+            <button name="model" id="model">Open Model File</button>
+          </div>
+          <div class="input-row">
+            <button name="save" id="save">Save Model</button>
+          </div>
+          <p><b>Projection View</b></p>
+          <div class="input-row">
+            <select name="projection" id="projection" style="margin-left: 8px">
+              <option value="orthographic">Orthographic</option>
+              <option value="oblique">Oblique</option>
+              <option value="perspective">Perspective</option>
+            </select>
+          </div>
+          <p><b>Translate</b></p>
+          <div class="input-row">
+            <label for="tx">x:</label>
+            <input class="translation" type="range" min="-1" max="1" step="0.01" name="tx" id="tx" oninput="this.nextElementSibling.value = this.value"/>
+            <output>0</output>
+          </div>
+          <div class="input-row">
+            <label for="ty">y:</label>
+            <input class="translation" type="range" min="-1" max="1" step="0.01" name="ty" id="ty" oninput="this.nextElementSibling.value = this.value"/>
+            <output>0</output>
+          </div>
+          <div class="input-row">
+            <label for="tz">z:</label>
+            <input class="translation" type="range" min="-1" max="1" step="0.01" name="tz" id="tz" oninput="this.nextElementSibling.value = this.value"/>
+            <output>0</output>
+          </div>
+
+          <!-- create like translation bu now its rotation (convert the below code to above coe) -->
+          <p><b>Rotation</b></p>
+          <div class="input-row">
+            <label for="rx">x:</label>
+            <input class="rotation" type="range" min="0" max="720" step="1" name="rx" id="rx" oninput="this.nextElementSibling.value = this.value"/>
+            <output>0</output>
+          </div>
+          <div class="input-row">
+            <label for="ry">y:</label>
+            <input class="rotation" type="range" min="0" max="720" step="1" name="ry" id="ry" oninput="this.nextElementSibling.value = this.value"/>
+            <output>0</output>
+          </div>
+          <div class="input-row">
+            <label for="rz">z:</label>
+            <input class="rotation" type="range" min="0" max="720" step="1" name="rz" id="rz" oninput="this.nextElementSibling.value = this.value"/>
+            <output>0</output>
+          </div>
+
+          <p><b>Scale</b></p>
+          <div class="input-row">
+            <label for="sx">x:</label>
+            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sx" id="sx" oninput="this.nextElementSibling.value = this.value"/>
+            <output>1</output>
+          </div>
+          <div class="input-row">
+            <label for="sy">y:</label>
+            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sy" id="sy" oninput="this.nextElementSibling.value = this.value"/>
+            <output>1</output>
+          </div>
+          <div class="input-row">
+            <label for="sz">z:</label>
+            <input class="scaling" type="range" min="0" max="2" step="0.01" name="sz" id="sz" oninput="this.nextElementSibling.value = this.value"/>
+            <output>1</output>
+          </div>
+
+          <p><b>Lighting and Shading</b></p>
+          <div class="input-row">
+            <input type="checkbox" name="shading" id="shading" checked />
+            <label for="shading">Use shading</label>
+          </div>
+          <p><b>Camera</b></p>
+          <div class="input-row">
+            <label for="cameraRadius">Radius:</label>
+            <input type="range" name="cameraRadius" id="cameraRadius" step="0.1" min="-2" max="2" oninput="this.nextElementSibling.value = this.value" />
+            <output>1.3</output>
+            <label for="cameraRotation" style="margin-left: 12px">Rotation:</label>
+            <input type="range" name="cameraRotation" id="cameraRotation" step="1" min="-360" max="360" oninput="this.nextElementSibling.value = this.value" />
+            <output>0</output>
+          </div>
+          <div class="input-row">
+            <button id="toDefault">Set to default</button>
+          </div>
         </div>
-        <div class="canvas__controller">
-          <b>Control Panel</b>
-          <div class="control-panel">
-            <div class="input-row">
-              <label for="model">Model:</label>
-              <!-- create a load button -->
-              <button name="model" id="model">Open Model File</button>
+      </div>
+      
+      <!-- modal -->
+      <div class="modal fade" id="modal-help" tabindex="-1" role="dialog" aria-labelledby="modal-help"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-help-label">Help Menu</h5>
+              <button  data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-            <div class="input-row">
-              <!-- create a save button -->
-              <button name="save" id="save">Save Model</button>
+            <div class="modal-body">
+              <!-- buat konten bantuan untuk open model file (json), mengubah projection view, translasi, rotasi, scaling -->
+              <p class="fw-bold">Open Model File</p>
+              <p>Click the button "Open Model File" and choose the file with .json extension</p>
+              <hr>
+              <p class="fw-bold">Projection View</p>
+              <p>Choose the projection view you want to use</p>
+              <hr>
+              <p class="fw-bold">Translate</p>
+              <!-- give explanation on how to translate it, dont just give explanation of what it is about -->
+              <p>Translate the object in the x, y, and z axis by moving the slider in translation section to the right or left</p>
+              <hr>
+              <p class="fw-bold">Rotation<br></p>
+              <p>Rotate the object in the x, y, and z axis by moving the slider in rotation section to the right or left</p>
+              <hr>
+              <p class="fw-bold">Scale</p>
+              <p>Rotate the object in the x, y, and z axis by moving the slider in scaling section to the right or left</p>
+              <hr>
+              <p class="fw-bold">Lighting and Shading</p>
+              <p>Check the box to use shading</p>
+              <hr>
+              <p class="fw-bold">Camera</p>
+              <p>Change the radius and rotation of the camera by moving the slider in camera section to the right or left</p>
+              <hr>
+              <p class="fw-bold">Set to default</p>
+              <p>Set the object to the default position by clicking the button "Set to default"</p>
+              <hr>
             </div>
-            <div class="input-row">
-              <label for="projection">Projection View:</label>
-              <select
-                name="projection"
-                id="projection"
-                style="margin-left: 8px"
-              >
-                <option value="orthographic">Orthographic</option>
-                <option value="oblique">Oblique</option>
-                <option value="perspective">Perspective</option>
-              </select>
-            </div>
-            <p><b>Translate</b></p>
-            <div class="input-row">
-              <label for="tx">x:</label>
-              <input
-                class="translation"
-                type="range"
-                min="-1"
-                max="1"
-                step="0.01"
-                name="tx"
-                id="tx"
-              />
-              <label for="ty" style="margin-left: 12px">y:</label>
-              <input
-                class="translation"
-                type="range"
-                min="-1"
-                max="1"
-                step="0.01"
-                name="ty"
-                id="ty"
-              />
-              <label for="tz" style="margin-left: 12px">z:</label>
-              <input
-                class="translation"
-                type="range"
-                min="-1"
-                max="1"
-                step="0.01"
-                name="tz"
-                id="tz"
-              />
-            </div>
-            <p><b>Rotation</b></p>
-            <div class="input-row">
-              <label for="rx">x:</label>
-              <input
-                type="range"
-                class="rotation"
-                min="0"
-                max="720"
-                name="rx"
-                id="rx"
-              />
-              <label for="ry" style="margin-left: 12px">y:</label>
-              <input
-                type="range"
-                class="rotation"
-                min="0"
-                max="720"
-                name="ry"
-                id="ry"
-              />
-              <label for="rz" style="margin-left: 12px">z:</label>
-              <input
-                type="range"
-                class="rotation"
-                min="0"
-                max="720"
-                name="rz"
-                id="rz"
-              />
-            </div>
-            <p><b>Scale</b></p>
-            <div class="input-row">
-              <label for="sx">x:</label>
-              <input
-                type="range"
-                class="scaling"
-                name="sx"
-                id="sx"
-                step="0.01"
-                max="2"
-              />
-              <label for="sy" style="margin-left: 12px">y:</label>
-              <input
-                type="range"
-                class="scaling"
-                name="sy"
-                id="sy"
-                step="0.01"
-                max="2"
-              />
-              <label for="sz" style="margin-left: 12px">z:</label>
-              <input
-                type="range"
-                class="scaling"
-                name="sz"
-                id="sz"
-                step="0.01"
-                max="2"
-              />
-            </div>
-            <p><b>Lighting and Shading</b></p>
-            <div class="input-row">
-              <input type="checkbox" name="shading" id="shading" checked />
-              <label for="shading">Use shading</label>
-            </div>
-            <p><b>Camera</b></p>
-            <div class="input-row">
-              <label for="cameraRadius">Radius:</label>
-              <input
-                type="range"
-                name="cameraRadius"
-                id="cameraRadius"
-                step="0.1"
-                min="-2"
-                max="2"
-              />
-              <label for="cameraRotation" style="margin-left: 12px"
-                >Rotation:</label
-              >
-              <input
-                type="range"
-                name="cameraRotation"
-                id="cameraRotation"
-                step="1"
-                min="-360"
-                max="360"
-              />
-            </div>
-            <div class="input-row">
-              <button id="toDefault">Set to default</button>
+            <div class="modal-footer">
+              <button data-bs-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+    crossorigin="anonymous"></script>
+</body>
+
 </html>
